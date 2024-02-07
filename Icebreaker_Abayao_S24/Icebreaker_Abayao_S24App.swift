@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Firebase
-import FirebaseFirestoreInternal
 
 @main
 struct Icebreaker_Abayao_S24App: App {

@@ -38,12 +38,13 @@ struct ContentView: View {
             
             TextField("Answer", text: $textAnswer)
             
-            Button(action: { writeStudentToFirebase()}){
+            Button(action: {
                 if (textAnswer != "") {
                     writeStudentToFirebase()
                 }
                 resetTextFields()
-                
+            })
+            {
                 Text("Submit").font(.system(size: 28))
             }
         }
@@ -65,7 +66,9 @@ struct ContentView: View {
     func setRandomQuestion(){
         print("Set random question pressed")
         var newQuestion = questions.randomElement()?.text
-        self.textQuestion = newQuestion!
+        if(newQuestion != nil){
+            self.textQuestion = newQuestion!
+        }
     }
     
     func getQuestionsFromFirebase(){
@@ -74,7 +77,7 @@ struct ContentView: View {
                 if let err = err { // if error is not nil
                     print("Error getting documents: \(err)")
                 } else { // get question documents from firebase
-                    for documents in querySnapshot!.documents {
+                    for document in querySnapshot!.documents {
                         print("\(document.documentID)")
                         if let question = Question(id: document.documentID, data: document.data()) {
                             print("Question ID = \(question.id), text = \(question.text)")
@@ -95,7 +98,7 @@ struct ContentView: View {
         print("Question: \(textQuestion)")
         print("Class: ios-spring2024")
         
-        let data = ["first_name": textFirstname,
+        let data = ["first_name": textFirstName,
                     "last_name" : textLastName,
                     "pref_name" : textPrefName,
                     "question"  : textQuestion,
@@ -104,7 +107,7 @@ struct ContentView: View {
         
         var ref: DocumentReference? = nil
         ref = db.collection("students")
-            .addDocuments(data: data) { err in
+            .addDocument(data: data) { err in
                 if let err = err {
                     print("Error adding document: \(err)")
                 } else {
